@@ -1,9 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap');
 
 :root{
-  --bg-secondary : #2D4356 ;
+  /* --bg-secondary : #2D4356 ;
   --bg-primary: #27374D;
   --border-color: #202c3c;
+   */ 
+   --bg-primary: 	#1a1f27;
+   --bg-secondary: #16191e;
 }
 
 *{
@@ -16,6 +19,10 @@
 
 body {
   background-color: var(--bg-primary);
+}
+
+h1 {
+  font-weight: 200;
 }
 
 a{
@@ -33,21 +40,34 @@ section.center-flex {
 .form-main {
   background-color: var(--bg-secondary);
   padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   min-height: 40%;
   min-width: 60%;
-  gap: 2rem;
   border-radius: 12px;
   color: aliceblue;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  justify-content: space-around;
+
+}
+
+.form-main .ls{
+  display: flex;
+  gap: 2rem;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.form-main .rs img{
+  max-height: 300px;
+  border-radius: 12px;
 }
 
 .btns-main{
   display: flex;
-  align-items: center;
-  justify-content: space-around;
+  align-items: flex-start;
+  justify-content: flex-start;
   width: 100%;
   gap: 1rem;
 }
@@ -56,8 +76,8 @@ section.center-flex {
   background-color: var(--bg-primary);
   padding: .5rem 1rem;
   color: aliceblue;
-  border: 2px solid var(--border-color);
   border-radius: 12px;
+  border: none;
   cursor: pointer;
   transition: all ease-in-out 300ms;
 }
@@ -73,4 +93,20 @@ button:hover{
   border: 2px solid var(--border-color);
   border-radius: 12px;
   font-size: 1rem;
+}
+
+.input-main{
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.input-container{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.input-container > div:nth-child(even){
+  text-align: right;
 }
