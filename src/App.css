@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap');
+
+:root{
+  --bg-secondary : #2D4356 ;
+  --bg-primary: #27374D;
+  --border-color: #202c3c;
+}
+
+*{
+  padding: 0;
+  margin:0;
+  box-sizing: border-box;
+  font-family: "Fredoka", sans-serif;
+  color: aliceblue;
+}
+
+body {
+  background-color: var(--bg-primary);
+}
+
+a{
+  color: currentColor;
+  text-decoration: none;
+}
+
+section.center-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.form-main {
+  background-color: var(--bg-secondary);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 40%;
+  min-width: 60%;
+  gap: 2rem;
+  border-radius: 12px;
+  color: aliceblue;
+}
+
+.btns-main{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  gap: 1rem;
+}
+
+.btns-main button{
+  background-color: var(--bg-primary);
+  padding: .5rem 1rem;
+  color: aliceblue;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all ease-in-out 300ms;
+}
+
+button:hover{
+  transform: scale(1.1);
+}
+
+.form-main input{
+  background-color: var(--bg-primary);
+  padding: .5rem 1rem;
+  color: aliceblue;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 1rem;
+}
