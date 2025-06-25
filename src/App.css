@@ -5,8 +5,8 @@
   --bg-primary: #27374D;
   --border-color: #202c3c;
    */ 
-   --bg-primary: 	#1a1f27;
-   --bg-secondary: #16191e;
+   --bg-primary: 	#90C67C;
+   --bg-secondary: #FEFDED;
 }
 
 *{
@@ -14,7 +14,7 @@
   margin:0;
   box-sizing: border-box;
   font-family: "Fredoka", sans-serif;
-  color: aliceblue;
+  color: var(---text-color);
 }
 
 body {
@@ -43,7 +43,7 @@ section.center-flex {
   min-height: 40%;
   min-width: 60%;
   border-radius: 12px;
-  color: aliceblue;
+  color: var(---text-color);
   display: flex;
   gap: 2rem;
   align-items: center;
@@ -75,7 +75,7 @@ section.center-flex {
 .btns-main button{
   background-color: var(--bg-primary);
   padding: .5rem 1rem;
-  color: aliceblue;
+  color: var(---text-color);
   border-radius: 12px;
   border: none;
   cursor: pointer;
@@ -89,7 +89,7 @@ button:hover{
 .form-main input{
   background-color: var(--bg-primary);
   padding: .5rem 1rem;
-  color: aliceblue;
+  color: var(---text-color);
   border: 2px solid var(--border-color);
   border-radius: 12px;
   font-size: 1rem;
@@ -109,4 +109,8 @@ button:hover{
 
 .input-container > div:nth-child(even){
   text-align: right;
+}
+
+img.icon{
+  height: 30px;
 }
