@@ -1,0 +1,47 @@
+.container-title{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-section{
+    padding: 1rem;
+    margin: 1rem;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.reward-point{
+    display: flex;
+    align-items: center;
+}
+
+.reward-point img{
+    height: 40px;
+}
+
+.shop-card{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    box-shadow: 4px 15px 32px -28px rgba(0,0,0,0.75);
+    padding: .7rem;
+    border-radius: 8px;
+    margin: .6rem .2rem;
+}
+
+.shop-card button{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.add-reward-btn{
+    position: fixed;
+    top: 90%;
+    left: 90%;
+    display: flex;
+    font-size: 3rem;
+}

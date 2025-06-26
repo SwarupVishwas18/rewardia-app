@@ -7,6 +7,7 @@
    */ 
    --bg-primary: 	#90C67C;
    --bg-secondary: #FEFDED;
+   --text-color: #585858;
 }
 
 *{
@@ -14,7 +15,7 @@
   margin:0;
   box-sizing: border-box;
   font-family: "Fredoka", sans-serif;
-  color: var(---text-color);
+  color: var(--text-color);
 }
 
 body {
@@ -23,11 +24,23 @@ body {
 
 h1 {
   font-weight: 200;
+  font-size: 2rem;
+}
+
+h2 {
+  font-weight: 100;
 }
 
 a{
   color: currentColor;
   text-decoration: none;
+}
+
+select {
+  background-color: var(--bg-primary);
+  padding: .4rem;
+  border: none;
+  border-radius: 8px;
 }
 
 section.center-flex {
