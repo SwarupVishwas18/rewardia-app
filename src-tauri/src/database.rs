@@ -16,8 +16,9 @@ pub struct User {
 
 #[derive(Serialize)]
 pub struct Mission {
-   id: i64,
+    id: i64,
     title: String,
+    user_id: i64,
 }
 
 #[derive(Serialize)]
@@ -216,4 +217,96 @@ pub fn insert_user(username: String, name: String, password: String) -> Result<i
     // Get the id of the just-inserted record
     let id = conn.last_insert_rowid();
     Ok(id)
+}
+
+// Mission CRUD Function
+
+#[tauri::command]
+pub fn get_all_missions(user_id: i64) -> Result<Vec<Mission>, String> {
+    let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+
+    let mut stmt = conn
+        .prepare("SELECT * FROM mission WHERE user_id = ?")
+        .map_err(|e| e.to_string())?;
+
+    let mission_iter = stmt
+        .query_map([user_id], |row| {
+            Ok(Task {
+                id: row.get(0),
+                title: row.get(1),
+                user_id: row.get(2),
+            })
+        })
+        .map_err(|e| e.to_string())?;
+    let mut missions = Vec::new();
+    for mission in mission_iter {
+        missions.push(mission.map_err(|e| e.to_string())?);
+    }
+    Ok(missions)
+}
+
+#[tauri::command]
+pub fn get_mission(id: i32) -> Result<Value, String> {
+    let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+    
+    let mut stmt = conn.prepare("SELECT * FROM mission WHERE id = ?").map_err(|e| e.to_string())?;
+    let column_names: Vec<String> = stmt.column_names().iter().map(|&s| s.to_string()).collect();
+
+    let mission = stmt.query_row([id], |row| {
+        let mut obj = serde_json::Map::new();
+        for (i, col_name) in column_names.iter().enumerate() {
+            let value: rusqlite::types::Value = row.get(i)?;
+            obj.insert(col_name.to_string(), sqlite_value_to_json(value));
+        }
+        Ok(Value::Object(obj))
+    });
+    match mission {
+        Ok(mission_data) => Ok(mission_data),
+        Err(rusqlite::Error::QueryReturnedNoRows) => Err("No mission found with the given ID.".to_string()),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+#[tauri::command]
+pub fn insert_mission(title: String,  user_id: i64) -> Result<i64, String> {
+    let is_completed = 0;
+    let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+    conn.execute(
+        "INSERT INTO mission (title, user_id) VALUES (?1,?2)",
+        params![
+            title,
+            user_id,
+        ],
+    ).map_err(|e| e.to_string())?;
+
+    // Get the id of the just-inserted record
+    let id = conn.last_insert_rowid();
+    Ok(id)
+}
+
+#[tauri::command]
+pub fn edit_mission(id:i32,title: String, user_id: i64) -> Result<(), String> {
+    let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+    conn.execute(
+        "UPDATE mission SET
+            title = ?2,
+            user_id = ?3,
+            WHERE id = ?1",
+        params![
+            id,
+            title,
+            user_id,
+            ],
+    ).map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+#[tauri::command]
+pub fn delete_mission(id:i32) -> Result<(), String> {
+    let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+    conn.execute(
+        "DELETE FROM mission WHERE id = ?1",
+        params![id],
+    ).map_err(|e| e.to_string())?;
+    Ok(())
 }

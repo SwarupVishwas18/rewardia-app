@@ -11,7 +11,9 @@ CREATE TABLE User (
 -- Category table
 CREATE TABLE Mission (
     id INTEGER PRIMARY KEY,
-    title TEXT NOT NULL
+    title TEXT NOT NULL,
+    user_id INTEGER,
+    FOREIGN KEY (user_id) REFERENCES User(id)
 );
 
 -- Task table
