@@ -94,7 +94,7 @@ pub fn get_all_tasks(user_id: i64) -> Result<Vec<Task>, String> {
     for task in task_iter {
         tasks.push(task.map_err(|e| e.to_string())?);
     }
-    Ok(task)
+    Ok(tasks)
 }
 
 #[tauri::command]
@@ -306,6 +306,107 @@ pub fn delete_mission(id:i32) -> Result<(), String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
     conn.execute(
         "DELETE FROM mission WHERE id = ?1",
+        params![id],
+    ).map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+
+
+// Reward CRUD Function
+
+#[tauri::command]
+pub fn get_all_rewards(user_id: i64) -> Result<Vec<Reward>, String> {
+    let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+
+    let mut stmt = conn
+        .prepare("SELECT * FROM reward WHERE user_id = ?")
+        .map_err(|e| e.to_string())?;
+
+    let reward_iter = stmt
+        .query_map([user_id], |row| {
+            Ok(Task {
+                id: row.get(0),
+                rew_name: row.get(1),
+                rew_point: row.get(2),
+                rew_status: row.get(3),
+                user_id: row.get(4),
+            })
+        })
+        .map_err(|e| e.to_string())?;
+    let mut rewards = Vec::new();
+    for reward in reward_iter {
+        rewards.push(reward.map_err(|e| e.to_string())?);
+    }
+    Ok(rewards)
+}
+
+#[tauri::command]
+pub fn get_reward(id: i32) -> Result<Value, String> {
+    let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+    
+    let mut stmt = conn.prepare("SELECT * FROM reward WHERE id = ?").map_err(|e| e.to_string())?;
+    let column_names: Vec<String> = stmt.column_names().iter().map(|&s| s.to_string()).collect();
+
+    let reward = stmt.query_row([id], |row| {
+        let mut obj = serde_json::Map::new();
+        for (i, col_name) in column_names.iter().enumerate() {
+            let value: rusqlite::types::Value = row.get(i)?;
+            obj.insert(col_name.to_string(), sqlite_value_to_json(value));
+        }
+        Ok(Value::Object(obj))
+    });
+    match reward {
+        Ok(reward_data) => Ok(reward_data),
+        Err(rusqlite::Error::QueryReturnedNoRows) => Err("No reward found with the given ID.".to_string()),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+#[tauri::command]
+pub fn insert_reward(rew_name: String,  rew_point: i64, rew_status: i64, user_id:i64) -> Result<i64, String> {
+    let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+    conn.execute(
+        "INSERT INTO reward (title, user_id) VALUES (?1,?2,?3,?4)",
+        params![
+            rew_name,
+            rew_point,
+            rew_status,
+            user_id
+        ],
+    ).map_err(|e| e.to_string())?;
+
+    // Get the id of the just-inserted record
+    let id = conn.last_insert_rowid();
+    Ok(id)
+}
+
+#[tauri::command]
+pub fn edit_reward(id:i32, rew_name: String,  rew_point: i64, rew_status: i64, user_id:i64) -> Result<(), String> {
+    let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+    conn.execute(
+        "UPDATE mission SET
+            rew_name = ?2,
+            rew_point = ?3,
+            rew_status = ?4,
+            user_id = ?5,
+            WHERE id = ?1",
+        params![
+            id,
+            rew_name,
+            rew_point,
+            rew_status,
+            user_id
+            ],
+    ).map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+#[tauri::command]
+pub fn delete_reward(id:i32) -> Result<(), String> {
+    let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+    conn.execute(
+        "DELETE FROM reward WHERE id = ?1",
         params![id],
     ).map_err(|e| e.to_string())?;
     Ok(())
