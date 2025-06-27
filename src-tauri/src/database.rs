@@ -174,3 +174,46 @@ pub fn delete_task(id:i32) -> Result<(), String> {
     Ok(())
     
 }
+
+
+// User CRUD Function
+
+#[tauri::command]
+pub fn get_user(username: String) -> Result<Value, String> {
+    let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+    
+    let mut stmt = conn.prepare("SELECT * FROM user WHERE username = ?").map_err(|e| e.to_string())?;
+    let column_names: Vec<String> = stmt.column_names().iter().map(|&s| s.to_string()).collect();
+
+    let user = stmt.query_row([username], |row| {
+        let mut obj = serde_json::Map::new();
+        for (i, col_name) in column_names.iter().enumerate() {
+            let value: rusqlite::types::Value = row.get(i)?;
+            obj.insert(col_name.to_string(), sqlite_value_to_json(value));
+        }
+        Ok(Value::Object(obj))
+    });
+    match user {
+        Ok(user_data) => Ok(user_data),
+        Err(rusqlite::Error::QueryReturnedNoRows) => Err("No user found with the given ID.".to_string()),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+#[tauri::command]
+pub fn insert_user(username: String, name: String, password: String) -> Result<i64, String> {
+    let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+    
+    conn.execute(
+        "INSERT INTO user (username, name, password) VALUES (?1,?2,?3)",
+        params![
+            username,
+            name ,
+            password,
+        ],
+    ).map_err(|e| e.to_string())?;
+
+    // Get the id of the just-inserted record
+    let id = conn.last_insert_rowid();
+    Ok(id)
+}
