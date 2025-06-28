@@ -94,3 +94,50 @@ export const signup = async (signupCreds) => {
 }
 
 // Mission API
+
+export const getAllMissions = async (user_id) => {
+    const result = await invoke("get_all_missions", { user_id });
+    return result;
+}
+
+export const getMission = async (id) => {
+    const result = await invoke('get_mission', { id });
+    const task = JSON.parse(JSON.stringify(result));
+    return task;
+}
+
+export const insertMission = async (mission) => {
+    try {
+        const id = await invoke('insert_mission', {
+            title: mission.title,
+            user_id: mission.userId,
+        });
+        return id;
+    } catch (err) {
+        return err + "";
+    }
+};
+
+export const editMission = async (mission) => {
+    try {
+        const id = await invoke('edit_mission', {
+            id: mission.id,
+            title: mission.title,
+            user_id: mission.userId,
+        });
+        return id;
+    } catch (err) {
+        return err + "";
+    }
+};
+
+export const deleteMission = async (id) => {
+    try {
+        await invoke('delete_mission', {
+            id: id
+        });
+        return "Successfully Deleted Task";
+    } catch (err) {
+        return err + "";
+    }
+}
