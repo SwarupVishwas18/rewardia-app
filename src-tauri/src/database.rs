@@ -79,13 +79,13 @@ pub fn get_all_tasks(user_id: i64) -> Result<Vec<Task>, String> {
     let task_iter = stmt
         .query_map([user_id], |row| {
             Ok(Task {
-                id: row.get(0),
-                mission: row.get(1),
-                task_name: row.get(2),
-                user_id: row.get(3),
-                points: row.get(4),
-                due_date: row.get(5),
-                is_completed: row.get(6), 
+                id: row.get(0)?,
+                mission: row.get(1)?,
+                task_name: row.get(2)?,
+                user_id: row.get(3)?,
+                points: row.get(4)?,
+                due_date: row.get(5)?,
+                is_completed: row.get(6)?, 
 
             })
         })
@@ -98,7 +98,7 @@ pub fn get_all_tasks(user_id: i64) -> Result<Vec<Task>, String> {
 }
 
 #[tauri::command]
-pub fn get_task(id: i32) -> Result<Value, String> {
+pub fn get_task(id: i64) -> Result<Value, String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
     
     let mut stmt = conn.prepare("SELECT * FROM task WHERE id = ?").map_err(|e| e.to_string())?;
@@ -141,7 +141,7 @@ pub fn insert_task(mission: String, task_name: String, user_id: i64, points: i64
 }
 
 #[tauri::command]
-pub fn edit_task(id:i32,mission: String, task_name: String, user_id: i64, points: i64, due_date: String, is_completed: i64) -> Result<(), String> {
+pub fn edit_task(id:i64,mission: String, task_name: String, user_id: i64, points: i64, due_date: String, is_completed: i64) -> Result<(), String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
     conn.execute(
         "UPDATE task SET
@@ -166,7 +166,7 @@ pub fn edit_task(id:i32,mission: String, task_name: String, user_id: i64, points
 }
 
 #[tauri::command]
-pub fn delete_task(id:i32) -> Result<(), String> {
+pub fn delete_task(id:i64) -> Result<(), String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
     conn.execute(
         "DELETE FROM task WHERE id = ?1",
@@ -180,13 +180,16 @@ pub fn delete_task(id:i32) -> Result<(), String> {
 // User CRUD Function
 
 #[tauri::command]
-pub fn get_user(username: String) -> Result<Value, String> {
+pub fn login_user(username: String, password: String) -> Result<Value, String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
-    
-    let mut stmt = conn.prepare("SELECT * FROM user WHERE username = ?").map_err(|e| e.to_string())?;
+
+    let mut stmt = conn
+        .prepare("SELECT * FROM user WHERE username = ? AND password = ?")
+        .map_err(|e| e.to_string())?;
+
     let column_names: Vec<String> = stmt.column_names().iter().map(|&s| s.to_string()).collect();
 
-    let user = stmt.query_row([username], |row| {
+    let user = stmt.query_row([&username, &password], |row| {
         let mut obj = serde_json::Map::new();
         for (i, col_name) in column_names.iter().enumerate() {
             let value: rusqlite::types::Value = row.get(i)?;
@@ -194,9 +197,10 @@ pub fn get_user(username: String) -> Result<Value, String> {
         }
         Ok(Value::Object(obj))
     });
+
     match user {
         Ok(user_data) => Ok(user_data),
-        Err(rusqlite::Error::QueryReturnedNoRows) => Err("No user found with the given ID.".to_string()),
+        Err(rusqlite::Error::QueryReturnedNoRows) => Err("Invalid username or password.".to_string()),
         Err(e) => Err(e.to_string()),
     }
 }
@@ -204,6 +208,18 @@ pub fn get_user(username: String) -> Result<Value, String> {
 #[tauri::command]
 pub fn insert_user(username: String, name: String, password: String) -> Result<i64, String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+
+    let mut stmt = conn
+        .prepare("SELECT COUNT(*) FROM user WHERE username = ?1")
+        .map_err(|e| e.to_string())?;
+    
+    let user_exists: i64 = stmt
+        .query_row([&username], |row| row.get(0))
+        .map_err(|e| e.to_string())?;
+
+    if user_exists > 0 {
+        return Err("Username already exists.".to_string());
+    }
     
     conn.execute(
         "INSERT INTO user (username, name, password) VALUES (?1,?2,?3)",
@@ -231,10 +247,10 @@ pub fn get_all_missions(user_id: i64) -> Result<Vec<Mission>, String> {
 
     let mission_iter = stmt
         .query_map([user_id], |row| {
-            Ok(Task {
-                id: row.get(0),
-                title: row.get(1),
-                user_id: row.get(2),
+            Ok(Mission {
+                id: row.get(0)?,
+                title: row.get(1)?,
+                user_id: row.get(2)?,
             })
         })
         .map_err(|e| e.to_string())?;
@@ -246,7 +262,7 @@ pub fn get_all_missions(user_id: i64) -> Result<Vec<Mission>, String> {
 }
 
 #[tauri::command]
-pub fn get_mission(id: i32) -> Result<Value, String> {
+pub fn get_mission(id: i64) -> Result<Value, String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
     
     let mut stmt = conn.prepare("SELECT * FROM mission WHERE id = ?").map_err(|e| e.to_string())?;
@@ -285,7 +301,7 @@ pub fn insert_mission(title: String,  user_id: i64) -> Result<i64, String> {
 }
 
 #[tauri::command]
-pub fn edit_mission(id:i32,title: String, user_id: i64) -> Result<(), String> {
+pub fn edit_mission(id:i64,title: String, user_id: i64) -> Result<(), String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
     conn.execute(
         "UPDATE mission SET
@@ -302,7 +318,7 @@ pub fn edit_mission(id:i32,title: String, user_id: i64) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub fn delete_mission(id:i32) -> Result<(), String> {
+pub fn delete_mission(id:i64) -> Result<(), String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
     conn.execute(
         "DELETE FROM mission WHERE id = ?1",
@@ -325,12 +341,12 @@ pub fn get_all_rewards(user_id: i64) -> Result<Vec<Reward>, String> {
 
     let reward_iter = stmt
         .query_map([user_id], |row| {
-            Ok(Task {
-                id: row.get(0),
-                rew_name: row.get(1),
-                rew_point: row.get(2),
-                rew_status: row.get(3),
-                user_id: row.get(4),
+            Ok(Reward {
+                id: row.get(0)?,
+                rew_name: row.get(1)?,
+                rew_point: row.get(2)?,
+                rew_status: row.get(3)?,
+                user_id: row.get(4)?,
             })
         })
         .map_err(|e| e.to_string())?;
@@ -342,7 +358,7 @@ pub fn get_all_rewards(user_id: i64) -> Result<Vec<Reward>, String> {
 }
 
 #[tauri::command]
-pub fn get_reward(id: i32) -> Result<Value, String> {
+pub fn get_reward(id: i64) -> Result<Value, String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
     
     let mut stmt = conn.prepare("SELECT * FROM reward WHERE id = ?").map_err(|e| e.to_string())?;
@@ -382,7 +398,7 @@ pub fn insert_reward(rew_name: String,  rew_point: i64, rew_status: i64, user_id
 }
 
 #[tauri::command]
-pub fn edit_reward(id:i32, rew_name: String,  rew_point: i64, rew_status: i64, user_id:i64) -> Result<(), String> {
+pub fn edit_reward(id:i64, rew_name: String,  rew_point: i64, rew_status: i64, user_id:i64) -> Result<(), String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
     conn.execute(
         "UPDATE mission SET
@@ -403,7 +419,7 @@ pub fn edit_reward(id:i32, rew_name: String,  rew_point: i64, rew_status: i64, u
 }
 
 #[tauri::command]
-pub fn delete_reward(id:i32) -> Result<(), String> {
+pub fn delete_reward(id:i64) -> Result<(), String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
     conn.execute(
         "DELETE FROM reward WHERE id = ?1",
