@@ -35,9 +35,9 @@ pub struct Task {
 #[derive(Serialize)]
 pub struct Reward {
     id: i64,
-    rew_name: String,
-    rew_point: i64,
-    rew_status: String,
+    name: String,
+    points: i64,
+    status: String,
     user_id: i64,
 }
 
@@ -343,9 +343,9 @@ pub fn get_all_rewards(user_id: i64) -> Result<Vec<Reward>, String> {
         .query_map([user_id], |row| {
             Ok(Reward {
                 id: row.get(0)?,
-                rew_name: row.get(1)?,
-                rew_point: row.get(2)?,
-                rew_status: row.get(3)?,
+                name: row.get(1)?,
+                points: row.get(2)?,
+                status: row.get(3)?,
                 user_id: row.get(4)?,
             })
         })
@@ -380,14 +380,14 @@ pub fn get_reward(id: i64) -> Result<Value, String> {
 }
 
 #[tauri::command]
-pub fn insert_reward(rew_name: String,  rew_point: i64, rew_status: i64, user_id:i64) -> Result<i64, String> {
+pub fn insert_reward(name: String,  points: i64, status: i64, user_id:i64) -> Result<i64, String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
     conn.execute(
-        "INSERT INTO reward (title, user_id) VALUES (?1,?2,?3,?4)",
+        "INSERT INTO reward (name, points, status,user_id) VALUES (?1,?2,?3,?4)",
         params![
-            rew_name,
-            rew_point,
-            rew_status,
+            name,
+            points,
+            status,
             user_id
         ],
     ).map_err(|e| e.to_string())?;
@@ -398,20 +398,20 @@ pub fn insert_reward(rew_name: String,  rew_point: i64, rew_status: i64, user_id
 }
 
 #[tauri::command]
-pub fn edit_reward(id:i64, rew_name: String,  rew_point: i64, rew_status: i64, user_id:i64) -> Result<(), String> {
+pub fn edit_reward(id:i64, name: String,  points: i64, status: i64, user_id:i64) -> Result<(), String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
     conn.execute(
         "UPDATE mission SET
-            rew_name = ?2,
-            rew_point = ?3,
-            rew_status = ?4,
+            name = ?2,
+            points = ?3,
+            status = ?4,
             user_id = ?5,
             WHERE id = ?1",
         params![
             id,
-            rew_name,
-            rew_point,
-            rew_status,
+            name,
+            points,
+            status,
             user_id
             ],
     ).map_err(|e| e.to_string())?;

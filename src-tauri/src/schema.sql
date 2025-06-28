@@ -32,9 +32,9 @@ CREATE TABLE Task (
 -- Reward table
 CREATE TABLE Reward (
     id INTEGER PRIMARY KEY,
-    rew_name TEXT NOT NULL,
-    rew_point INTEGER,
-    rew_status TEXT,
+    name TEXT NOT NULL,
+    points INTEGER,
+    status TEXT,
     user_id INTEGER,
     FOREIGN KEY (user_id) REFERENCES User(id)
 );
