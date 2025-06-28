@@ -136,7 +136,60 @@ export const deleteMission = async (id) => {
         await invoke('delete_mission', {
             id: id
         });
-        return "Successfully Deleted Task";
+        return "Successfully Deleted Mission";
+    } catch (err) {
+        return err + "";
+    }
+}
+
+// Rewards API
+
+export const getAllRewards = async (user_id) => {
+    const result = await invoke("get_all_rewards", { user_id });
+    return result;
+}
+
+export const getReward = async (id) => {
+    const result = await invoke('get_reward', { id });
+    const task = JSON.parse(JSON.stringify(result));
+    return task;
+}
+
+export const insertReward = async (reward) => {
+    try {
+        const id = await invoke('insert_reward', {
+            rew_name: reward.name,
+            rew_point: reward.points,
+            rew_status: reward.status,
+            user_id: reward.userId
+        });
+        return id;
+    } catch (err) {
+        return err + "";
+    }
+};
+
+export const editReward = async (reward) => {
+    try {
+        const id = await invoke('edit_mission', {
+            id: reward.id,
+            rew_name: reward.name,
+            rew_point: reward.points,
+            rew_status: reward.status,
+            user_id: reward.userId
+        });
+        return id;
+    } catch (err) {
+        return err + "";
+    }
+};
+
+export const deleteReward = async (id) => {
+    try {
+        await invoke('delete_reward', {
+            id: id
+        });
+        return "Successfully Deleted Reward";
     } catch (err) {
         return err + "";
     }
