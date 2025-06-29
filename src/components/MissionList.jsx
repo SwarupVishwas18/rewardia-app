@@ -14,6 +14,9 @@ function MissionList({ missions, setActiveMission }) {
                 <div className="mission-link"><a href="">Mission</a></div>
                 <div className="mission-link"><a href="">Mission</a></div>
             </div>
+            <div className="btns-main">
+                <button>Add Mission</button>
+            </div>
         </section>
     )
 }
