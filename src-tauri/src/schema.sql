@@ -40,4 +40,10 @@ CREATE TABLE Reward (
     FOREIGN KEY (user_id) REFERENCES User(id)
 );
 
+CREATE TABLE Session (
+            id INTEGER PRIMARY KEY CHECK (id = 1),
+            user_id INTEGER NOT NULL,
+            token TEXT NOT NULL
+);
+
 COMMIT;

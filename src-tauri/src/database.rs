@@ -42,6 +42,12 @@ pub struct Reward {
     user_id: i64,
 }
 
+#[derive(serde::Serialize)]
+struct Session {
+    user_id: i32,
+    token: String,
+}
+
 
 fn sqlite_value_to_json(val: rusqlite::types::Value) -> Value {
     use rusqlite::types::Value::*;
@@ -428,5 +434,44 @@ pub fn delete_reward(id:i64) -> Result<(), String> {
         "DELETE FROM reward WHERE id = ?1",
         params![id],
     ).map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+// Session Crud
+
+
+
+#[tauri::command]
+fn save_session( user_id: i32, token: String) -> Result<(), String> {
+    let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+    conn.execute(
+        "INSERT OR REPLACE INTO session (id, user_id, token) VALUES (1, ?1, ?2)",
+        params![user_id, token],
+    ).map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+#[tauri::command]
+fn get_session() -> Result<Option<Session>, String> {
+    let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+    let mut stmt = conn.prepare("SELECT user_id, token FROM session WHERE id = 1")
+        .map_err(|e| e.to_string())?;
+    let mut rows = stmt.query([]).map_err(|e| e.to_string())?;
+
+    if let Some(row) = rows.next().map_err(|e| e.to_string())? {
+        let session = Session {
+            user_id: row.get(0).map_err(|e| e.to_string())?,
+            token: row.get(1).map_err(|e| e.to_string())?,
+        };
+        Ok(Some(session))
+    } else {
+        Ok(None)
+    }
+}
+
+#[tauri::command]
+fn clear_session() -> Result<(), String> {
+    let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+    conn.execute("DELETE FROM session WHERE id=1", []).map_err(|e| e.to_string())?;
     Ok(())
 }
