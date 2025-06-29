@@ -5,7 +5,8 @@ CREATE TABLE User (
     id INTEGER PRIMARY KEY,
     username TEXT NOT NULL,
     name TEXT NOT NULL,
-    password TEXT NOT NULL
+    password TEXT NOT NULL,
+    points INTEGER
 );
 
 -- Category table

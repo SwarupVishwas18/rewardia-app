@@ -12,6 +12,7 @@ pub struct User {
     name: String,
     username: String,
     password: String,
+    points : i64,
 }
 
 #[derive(Serialize)]
@@ -208,6 +209,7 @@ pub fn login_user(username: String, password: String) -> Result<Value, String> {
 #[tauri::command]
 pub fn insert_user(username: String, name: String, password: String) -> Result<i64, String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+    let default_points = 0;
 
     let mut stmt = conn
         .prepare("SELECT COUNT(*) FROM user WHERE username = ?1")
@@ -222,11 +224,12 @@ pub fn insert_user(username: String, name: String, password: String) -> Result<i
     }
     
     conn.execute(
-        "INSERT INTO user (username, name, password) VALUES (?1,?2,?3)",
+        "INSERT INTO user (username, name, password, points) VALUES (?1,?2,?3)",
         params![
             username,
             name ,
             password,
+            default_points,
         ],
     ).map_err(|e| e.to_string())?;
 
