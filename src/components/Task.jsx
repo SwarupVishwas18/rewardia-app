@@ -1,3 +1,4 @@
+import { FaTrash } from "react-icons/fa";
 import coin from "../assets/coin.png"
 
 function Task({ task }) {
@@ -7,6 +8,7 @@ function Task({ task }) {
             <div className="task-title">{task.title}</div>
             <div className="task-points">{task.points} <img src={coin} alt="" /></div>
             <div className="task-deadline">{task.deadline}</div>
+            <div className="task-delete"><FaTrash /></div>
         </div>
     )
 }
