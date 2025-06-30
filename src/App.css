@@ -43,6 +43,10 @@ select {
   border-radius: 8px;
 }
 
+ul {
+  list-style-type: none;
+}
+
 section.center-flex {
     display: flex;
     align-items: center;
