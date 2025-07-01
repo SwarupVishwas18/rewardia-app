@@ -12,7 +12,7 @@ export const initDatabase = async () => {
 // Task API
 
 export const getAllTasks = async (user_id) => {
-    const result = await invoke("get_all_tasks", { user_id });
+    const result = await invoke("get_all_tasks", { userId: user_id });
     return result;
 }
 
@@ -26,10 +26,10 @@ export const insertTask = async (task) => {
     try {
         const id = await invoke('insert_task', {
             mission: task.missionId,
-            task_name: task.taskName,
-            user_id: task.userId,
+            taskName: task.taskName,
+            userId: task.userId,
             points: task.points,
-            due_date: task.dueDate,
+            dueDate: task.dueDate,
         });
         return id;
     } catch (err) {
@@ -218,7 +218,7 @@ export const saveSession = async (user_id, token) => {
         console.log(user_id + " : " + token);
 
         const id = await invoke('save_session', {
-            user_id, token,
+            userId: user_id, token: token,
         });
         console.log(id);
 

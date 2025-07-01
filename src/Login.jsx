@@ -30,8 +30,8 @@ function Login() {
                     if (result.success) {
                         console.log(result.data);
                         saveSession(result.data.id, crypto.randomUUID().toString()).then((res) => {
-                            // navigate("/home")
                             console.log(res);
+                            navigate("/home")
 
                         }).catch((e) => {
                             console.log(e);
