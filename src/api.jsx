@@ -42,10 +42,10 @@ export const editTask = async (task) => {
         const id = await invoke('edit_task', {
             id: task.id,
             mission: task.missionId,
-            task_name: task.taskName,
-            user_id: task.userId,
+            taskName: task.taskName,
+            userId: task.userId,
             points: task.points,
-            due_date: task.dueDate,
+            dueDate: task.dueDate,
         });
         return id;
     } catch (err) {
@@ -98,7 +98,7 @@ export const signup = async (username, name, password) => {
 // Mission API
 
 export const getAllMissions = async (user_id) => {
-    const result = await invoke("get_all_missions", { user_id });
+    const result = await invoke("get_all_missions", { userId: user_id });
     return result;
 }
 
@@ -112,7 +112,7 @@ export const insertMission = async (mission) => {
     try {
         const id = await invoke('insert_mission', {
             title: mission.title,
-            user_id: mission.userId,
+            userId: mission.userId,
         });
         return id;
     } catch (err) {
@@ -125,7 +125,7 @@ export const editMission = async (mission) => {
         const id = await invoke('edit_mission', {
             id: mission.id,
             title: mission.title,
-            user_id: mission.userId,
+            userId: mission.userId,
         });
         return id;
     } catch (err) {
@@ -147,7 +147,7 @@ export const deleteMission = async (id) => {
 // Rewards API
 
 export const getAllRewards = async (user_id) => {
-    const result = await invoke("get_all_rewards", { user_id });
+    const result = await invoke("get_all_rewards", { userId });
     return result;
 }
 
@@ -160,10 +160,10 @@ export const getReward = async (id) => {
 export const insertReward = async (reward) => {
     try {
         const id = await invoke('insert_reward', {
-            rew_name: reward.name,
-            rew_point: reward.points,
-            rew_status: reward.status,
-            user_id: reward.userId
+            name: reward.name,
+            point: reward.points,
+            status: reward.status,
+            userId: reward.userId
         });
         return id;
     } catch (err) {
@@ -175,10 +175,10 @@ export const editReward = async (reward) => {
     try {
         const id = await invoke('edit_mission', {
             id: reward.id,
-            rew_name: reward.name,
-            rew_point: reward.points,
-            rew_status: reward.status,
-            user_id: reward.userId
+            name: reward.name,
+            point: reward.points,
+            status: reward.status,
+            userId: reward.userId
         });
         return id;
     } catch (err) {
