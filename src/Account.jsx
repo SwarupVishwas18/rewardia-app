@@ -1,7 +1,17 @@
 import AuthNav from "./components/AuthNav";
 import coin from "./assets/coin.png";
 import "./Account.css"
+import { useNavigate } from "react-router";
+import { clearSession } from "./api";
 function Account() {
+    const navigate = useNavigate()
+
+    const handleLogout = () => {
+        clearSession().then(() => {
+            console.log("deleted");
+            navigate("/")
+        })
+    }
     return (
         <div className="account-page">
             <AuthNav />
@@ -12,7 +22,7 @@ function Account() {
                         <h1>Swarup Vishwas</h1>
                         <div className="username">@halfbloodprince</div>
                         <div className="highlight-green">
-                            <div className="logout-btn">Logout</div>
+                            <div className="logout-btn" onClick={handleLogout}>Logout</div>
                         </div>
                     </div>
                 </section>

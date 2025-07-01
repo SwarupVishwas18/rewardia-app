@@ -9,7 +9,7 @@ CREATE TABLE User (
     points INTEGER
 );
 
--- Category table
+-- Mission table
 CREATE TABLE Mission (
     id INTEGER PRIMARY KEY,
     title TEXT NOT NULL,
@@ -26,7 +26,8 @@ CREATE TABLE Task (
     points INTEGER,
     due_date TEXT,        -- store as TEXT (YYYY-MM-DD)
     is_completed INTEGER DEFAULT 0,
-    FOREIGN KEY (category) REFERENCES Mission(id),
+    completed_date TEXT,
+    FOREIGN KEY (mission) REFERENCES Mission(id),
     FOREIGN KEY (user_id) REFERENCES User(id)
 );
 

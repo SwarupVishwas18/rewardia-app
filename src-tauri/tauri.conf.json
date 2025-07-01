@@ -16,11 +16,14 @@
       "shell": {
         "all": false,
         "open": true
+      },
+      "dialog": {
+        "all": true
       }
     },
     "windows": [
       {
-        "title": "rewardia-app",
+        "title": "Rewardia",
         "width": 800,
         "height": 600
       }

@@ -43,7 +43,7 @@ pub struct Reward {
 }
 
 #[derive(serde::Serialize)]
-struct Session {
+pub struct Session {
     user_id: i32,
     token: String,
 }
@@ -148,7 +148,7 @@ pub fn insert_task(mission: String, task_name: String, user_id: i64, points: i64
 }
 
 #[tauri::command]
-pub fn edit_task(id:i64,mission: String, task_name: String, user_id: i64, points: i64, due_date: String, is_completed: i64) -> Result<(), String> {
+pub fn edit_task(id:i64,mission: String, task_name: String, user_id: i64, points: i64, due_date: String, is_completed: i64, completed_date: String) -> Result<(), String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
     conn.execute(
         "UPDATE task SET
@@ -158,6 +158,7 @@ pub fn edit_task(id:i64,mission: String, task_name: String, user_id: i64, points
             points = ?5,
             due_date = ?6,
             is_completed = ?7,
+            completed_date = ?8,
             WHERE id = ?1",
         params![
             id,
@@ -167,6 +168,7 @@ pub fn edit_task(id:i64,mission: String, task_name: String, user_id: i64, points
             points,
             due_date,
             is_completed,
+            completed_date,
             ],
     ).map_err(|e| e.to_string())?;
     Ok(())
@@ -230,7 +232,7 @@ pub fn insert_user(username: String, name: String, password: String) -> Result<i
     }
     
     conn.execute(
-        "INSERT INTO user (username, name, password, points) VALUES (?1,?2,?3)",
+        "INSERT INTO user (username, name, password, points) VALUES (?1,?2,?3, ?4)",
         params![
             username,
             name ,
@@ -442,8 +444,9 @@ pub fn delete_reward(id:i64) -> Result<(), String> {
 
 
 #[tauri::command]
-fn save_session( user_id: i32, token: String) -> Result<(), String> {
+pub fn save_session( user_id: i32, token: String) -> Result<(), String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+    println!("{} - {}",user_id, token);
     conn.execute(
         "INSERT OR REPLACE INTO session (id, user_id, token) VALUES (1, ?1, ?2)",
         params![user_id, token],
@@ -452,7 +455,7 @@ fn save_session( user_id: i32, token: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn get_session() -> Result<Option<Session>, String> {
+pub fn get_session() -> Result<Option<Session>, String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
     let mut stmt = conn.prepare("SELECT user_id, token FROM session WHERE id = 1")
         .map_err(|e| e.to_string())?;
@@ -470,7 +473,7 @@ fn get_session() -> Result<Option<Session>, String> {
 }
 
 #[tauri::command]
-fn clear_session() -> Result<(), String> {
+pub fn clear_session() -> Result<(), String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
     conn.execute("DELETE FROM session WHERE id=1", []).map_err(|e| e.to_string())?;
     Ok(())

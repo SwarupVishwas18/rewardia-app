@@ -66,30 +66,32 @@ export const deleteTask = async (id) => {
 
 // Users API
 
-export const login = async (loginCreds) => {
+export const login = async (username, password) => {
     try {
         const result = await invoke("login_user", {
-            username: loginCreds.username,
-            password: loginCreds.password,
+            username: username,
+            password: password,
         })
 
-        return result
+        return { success: true, data: result }
     }
     catch (e) {
-        return '' + e;
+        return { success: false, error: e.toString() };
     }
 }
 
-export const signup = async (signupCreds) => {
+export const signup = async (username, name, password) => {
     try {
         const id = await invoke('insert_user', {
-            username: signupCreds.username,
-            name: signupCreds.name,
-            password: signupCreds.password,
+            username: username,
+            name: name,
+            password: password,
         });
-        return id;
+        return { success: true, data: id };
     } catch (err) {
-        return err + "";
+        console.log(err);
+
+        return { success: false, error: err.toString() };
     }
 }
 
@@ -192,5 +194,47 @@ export const deleteReward = async (id) => {
         return "Successfully Deleted Reward";
     } catch (err) {
         return err + "";
+    }
+}
+
+// Session Check
+
+export const checkSession = async () => {
+    try {
+        const result = await invoke("get_session")
+        if (result) {
+            return result
+        } else {
+            return null;
+        }
+    } catch (error) {
+        return error
+    }
+}
+
+
+export const saveSession = async (user_id, token) => {
+    try {
+        console.log(user_id + " : " + token);
+
+        const id = await invoke('save_session', {
+            user_id, token,
+        });
+        console.log(id);
+
+        return id;
+    } catch (err) {
+        console.log(err);
+
+        return err + "";
+    }
+};
+
+export const clearSession = async () => {
+    try {
+        await invoke("clear_session");
+        return true
+    } catch (err) {
+        return err + ""
     }
 }

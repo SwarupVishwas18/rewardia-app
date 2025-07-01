@@ -55,7 +55,7 @@ section.center-flex {
 }
 
 .form-main {
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-primary);
   padding: 2rem;
   min-height: 40%;
   min-width: 60%;
@@ -90,7 +90,7 @@ section.center-flex {
 }
 
 .btns-main button{
-  background-color: var(--bg-primary);
+  background-color: var(--bg-secondary);
   padding: .5rem 1rem;
   color: var(---text-color);
   border-radius: 12px;
@@ -104,7 +104,7 @@ button:hover{
 }
 
 .form-main input{
-  background-color: var(--bg-primary);
+  background-color: var(--bg-secondary);
   padding: .5rem 1rem;
   color: var(---text-color);
   border: 2px solid var(--border-color);
