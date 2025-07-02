@@ -38,7 +38,7 @@ pub struct Reward {
     id: i64,
     name: String,
     points: i64,
-    status: String,
+    status: i64,
     user_id: i64,
 }
 
@@ -343,15 +343,15 @@ pub fn delete_mission(id:i64) -> Result<(), String> {
 // Reward CRUD Function
 
 #[tauri::command]
-pub fn get_all_rewards(user_id: i64) -> Result<Vec<Reward>, String> {
+pub fn get_all_rewards(user_id: i64, status: i64) -> Result<Vec<Reward>, String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
 
     let mut stmt = conn
-        .prepare("SELECT * FROM reward WHERE user_id = ?")
+        .prepare("SELECT * FROM reward WHERE user_id = ? and status=?")
         .map_err(|e| e.to_string())?;
 
     let reward_iter = stmt
-        .query_map([user_id], |row| {
+        .query_map([user_id, status], |row| {
             Ok(Reward {
                 id: row.get(0)?,
                 name: row.get(1)?,
@@ -412,11 +412,11 @@ pub fn insert_reward(name: String,  points: i64, status: i64, user_id:i64) -> Re
 pub fn edit_reward(id:i64, name: String,  points: i64, status: i64, user_id:i64) -> Result<(), String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
     conn.execute(
-        "UPDATE mission SET
+        "UPDATE reward SET
             name = ?2,
             points = ?3,
             status = ?4,
-            user_id = ?5,
+            user_id = ?5
             WHERE id = ?1",
         params![
             id,

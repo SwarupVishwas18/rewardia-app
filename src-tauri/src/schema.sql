@@ -36,7 +36,7 @@ CREATE TABLE Reward (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     points INTEGER,
-    status TEXT,
+    status INTEGER,
     user_id INTEGER,
     FOREIGN KEY (user_id) REFERENCES User(id)
 );

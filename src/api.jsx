@@ -146,8 +146,15 @@ export const deleteMission = async (id) => {
 
 // Rewards API
 
-export const getAllRewards = async (user_id) => {
-    const result = await invoke("get_all_rewards", { userId });
+export const getAllRewards = async (user_id, status) => {
+    console.log(user_id);
+
+    const result = await invoke("get_all_rewards", {
+        userId: user_id,
+        status: status
+    });
+    console.log(result);
+
     return result;
 }
 
@@ -161,10 +168,12 @@ export const insertReward = async (reward) => {
     try {
         const id = await invoke('insert_reward', {
             name: reward.name,
-            point: reward.points,
+            points: reward.points,
             status: reward.status,
             userId: reward.userId
         });
+        console.log(id);
+
         return id;
     } catch (err) {
         return err + "";
@@ -173,10 +182,12 @@ export const insertReward = async (reward) => {
 
 export const editReward = async (reward) => {
     try {
-        const id = await invoke('edit_mission', {
+        console.log(reward);
+
+        const id = await invoke('edit_reward', {
             id: reward.id,
             name: reward.name,
-            point: reward.points,
+            points: reward.points,
             status: reward.status,
             userId: reward.userId
         });

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router";
@@ -7,7 +7,7 @@ import Home from "./Home";
 import Signup from "./Signup";
 import Shop from "./Shop";
 import Account from "./Account";
-import { checkSession, initDatabase } from "./api"
+import { checkSession, getAllRewards, initDatabase } from "./api"
 import Landing from "./Landing"
 
 function App() {
