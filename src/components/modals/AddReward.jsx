@@ -18,7 +18,13 @@ function AddReward({ setIsModalVisible, setRewards, userId, rewards }) {
                 userId: userId
             }).then(res => {
                 console.log(res);
-                setRewards([...rewards, res])
+                setRewards([...rewards, {
+                    id: res,
+                    name: name,
+                    points: points,
+                    status: 0,
+                    userId: userId
+                }])
                 setIsModalVisible(false)
             }).catch(e => {
                 console.log(e);

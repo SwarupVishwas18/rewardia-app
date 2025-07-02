@@ -15,8 +15,12 @@ function AddMission({ setIsModalVisible, setMissions, userId, missions }) {
                 userId: userId
             }).then(res => {
                 console.log(res);
-                setMissions([...missions, res])
-                
+                setMissions([...missions, {
+                    id: res,
+                    title: name,
+                    userId: userId
+                }])
+
                 setIsModalVisible(false)
             }).catch(e => {
                 console.log(e);

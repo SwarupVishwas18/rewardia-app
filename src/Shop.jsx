@@ -66,7 +66,7 @@ function Shop() {
                 <div className="card-container">
                     {rewards.length == 0 && <h2>No Rewards Found.</h2>}
                     {rewards.map((id, index) => (
-                        <Card key={id} reward={rewards[index]} setRewards={setRewards} displayRewards={rewards} />
+                        <Card key={index} reward={rewards[index]} setRewards={setRewards} displayRewards={rewards} />
                     ))}
                 </div>
             </section>
