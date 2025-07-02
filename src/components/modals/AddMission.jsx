@@ -1,24 +1,22 @@
 import { useState } from "react"
-import { insertReward } from "../../api";
+import { insertMission } from "../../api";
 
-function AddReward({ setIsModalVisible, setRewards, userId, rewards }) {
+function AddMission({ setIsModalVisible, setMissions, userId, missions }) {
 
     const [name, setName] = useState("");
-    const [points, setPoints] = useState(0);
 
     const handleSubmit = () => {
-        if (points == 0 || name == "") {
+        if (name == "") {
             alert("data not entered")
         } else {
 
-            insertReward({
-                name: name,
-                points: parseInt(points),
-                status: 0,
+            insertMission({
+                title: name,
                 userId: userId
             }).then(res => {
                 console.log(res);
-                setRewards([...rewards, res])
+                setMissions([...missions, res])
+                
                 setIsModalVisible(false)
             }).catch(e => {
                 console.log(e);
@@ -30,16 +28,13 @@ function AddReward({ setIsModalVisible, setRewards, userId, rewards }) {
     return (
         <div className="modal-bg">
             <div className="modal">
-                <h1>Add Reward</h1>
+                <h1>Add Mission</h1>
                 <div className="modal-form">
                     <div className="modal-input">
-                        <label htmlFor="reward-title">Reward Title :</label>
+                        <label htmlFor="reward-title">Mission Title :</label>
                         <input type="text" name="reward-title" value={name} onChange={(e) => { setName(e.target.value) }} id="reward-title" />
                     </div>
-                    <div className="modal-input">
-                        <label htmlFor="reward-points">Reward Points : </label>
-                        <input type="number" name="reward-points" value={points} onChange={(e) => { setPoints(e.target.value) }} id="reward-points" />
-                    </div>
+
                     <div className="modal-btns">
                         <button onClick={handleSubmit}>Submit</button>
                         <button onClick={() => { setIsModalVisible(false) }}>Close</button>
@@ -50,4 +45,4 @@ function AddReward({ setIsModalVisible, setRewards, userId, rewards }) {
     )
 }
 
-export default AddReward
+export default AddMission
