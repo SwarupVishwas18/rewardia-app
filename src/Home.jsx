@@ -4,7 +4,7 @@ import AuthNav from "./components/AuthNav";
 import MissionList from "./components/MissionList";
 import TaskContainer from "./components/TaskContainer";
 import "./Home.css";
-import { checkSession, getAllMissions, initDatabase } from "./api";
+import { checkSession, getAllMissions, getUser, initDatabase } from "./api";
 import AddMission from "./components/modals/AddMission";
 function Home() {
 
@@ -13,6 +13,8 @@ function Home() {
     const [activeMission, setActiveMission] = useState({
         title: ""
     })
+
+    const [userDetails, setUserDetails] = useState({})
     const [isModalVisible, setIsModalVisible] = useState(false);
     let [tasks, setTasks] = useState([]);
 
@@ -34,6 +36,10 @@ function Home() {
                     }).catch((e) => {
                         console.log(userId);
                     })
+
+                    getUser(result.user_id).then((data) => {
+                        setUserDetails(data)
+                    })
                 } else {
                     navigate("/")
                 }
@@ -45,7 +51,7 @@ function Home() {
     return (
         <div className="main">
             {isModalVisible && <AddMission setIsModalVisible={setIsModalVisible} setMissions={setMissions} userId={userId} missions={missions} />}
-            <AuthNav />
+            <AuthNav userDetails={userDetails} />
             <div className="home-container">
                 <div className="home-ls">
                     <MissionList setActiveMission={setActiveMission} missions={missions} setMissions={setMissions} />
@@ -54,7 +60,7 @@ function Home() {
                     </div>
                 </div>
                 <div className="home-rs">
-                    <TaskContainer taskCtrTitle={"My Day"} activeMission={activeMission} userId={userId} tasks={tasks} setTasks={setTasks} />
+                    <TaskContainer taskCtrTitle={"My Day"} activeMission={activeMission} userId={userId} tasks={tasks} setTasks={setTasks} userDetails={userDetails} />
                     <AddTaskForm userId={userId} mission={activeMission} setTasks={setTasks} tasks={tasks} />
                 </div>
             </div>

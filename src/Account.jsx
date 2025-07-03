@@ -2,9 +2,33 @@ import AuthNav from "./components/AuthNav";
 import coin from "./assets/coin.png";
 import "./Account.css"
 import { useNavigate } from "react-router";
-import { clearSession } from "./api";
+import { clearSession, getUser, initDatabase, checkSession } from "./api";
+import { useEffect, useState } from "react";
 function Account() {
     const navigate = useNavigate()
+
+    const [userDetails, setUserDetails] = useState({});
+
+    useEffect(() => {
+
+        initDatabase().then((result2) => {
+            checkSession().then((result) => {
+                if (result) {
+                    console.log(result);
+
+                    getUser(result.user_id).then((data) => {
+                        console.log(data);
+
+                        setUserDetails(data)
+                    })
+                } else {
+                    navigate("/")
+                }
+            })
+        }).catch((err) => {
+            console.log(err);
+        });
+    }, [])
 
     const handleLogout = () => {
         clearSession().then(() => {
@@ -14,26 +38,19 @@ function Account() {
     }
     return (
         <div className="account-page">
-            <AuthNav />
+            <AuthNav userDetails={userDetails} />
             <div className="account-main">
                 <section className="account-info">
-                    <div className="account-ls"><img src="https://robohash.org/swarupvishwas.png" alt="" /></div>
+                    <div className="account-ls"><img src={`https://robohash.org/${userDetails.username}.png`} alt="" /></div>
                     <div className="account-rs">
-                        <h1>Swarup Vishwas</h1>
-                        <div className="username">@halfbloodprince</div>
+                        <h1>{userDetails.name}</h1>
+                        <div className="username">@{userDetails.username}</div>
                         <div className="highlight-green">
                             <div className="logout-btn" onClick={handleLogout}>Logout</div>
                         </div>
                     </div>
                 </section>
-                <section className="account-stats">
-                    <ul className="account-stats">
-                        <li>Total Missions : 2303</li>
-                        <li>Total Tasks : 2303</li>
-                        <li>Completed Tasks : 2303</li>
-                        <li>Rewards Bought : 2303</li>
-                    </ul>
-                </section>
+
             </div>
         </div>
     )

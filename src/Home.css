@@ -103,6 +103,7 @@ nav img{
     flex-direction: column;
     gap: .3rem;
     overflow-y: scroll;
+    height: 55vh;
 }
 
 .mission-list .mission-link{

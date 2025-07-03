@@ -11,22 +11,22 @@ function Landing() {
     const features = [{
         title: "Group Your Goals with Missions",
         subtitle: "Create categories like Work, Fitness, or Study. Organize your tasks with purpose.",
-        img: "/image.png"
+        img: "/2.png"
     },
     {
         title: "Add Tasks, Set Your Own Points",
         subtitle: "Assign custom point values to each task based on difficulty or priority. Your effort, your value.",
-        img: "/image.png"
+        img: "/1.png"
     }
         , {
         title: "Earn, Save, Redeem",
         subtitle: "Spend your earned points in the in-app shop. From fun perks to unlockables.",
-        img: "/image.png"
+        img: "/3.png"
     }
         , {
         title: "Your Personal Productivity Dashboard",
         subtitle: "See how far you’ve come with daily stats, streaks, and visual achievements.",
-        img: "/image.png"
+        img: "/4.png"
     }]
 
     const [currentFeature, setCurrentFeature] = useState(features[0])
