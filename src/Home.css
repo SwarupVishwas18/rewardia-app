@@ -119,7 +119,7 @@ nav img{
 }
 
 .tasks-container{
-    height: 18vh;
+    height: 60vh;
     overflow-y: scroll;
 }
 
@@ -129,6 +129,7 @@ nav img{
     display: flex;
     flex-direction: column;
     gap: .5rem;
+    
 }
 
 .add-task-form{
@@ -253,4 +254,8 @@ html {
 .btns-main button{
     width: 100%;
     margin-top: 12px;
+}
+
+.tasks-container .task, .mission-link {
+    cursor: pointer;
 }

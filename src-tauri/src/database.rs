@@ -76,15 +76,15 @@ pub fn init_database() -> Result<String, String>  {
 // Task CRUD Function
 
 #[tauri::command]
-pub fn get_all_tasks(user_id: i64) -> Result<Vec<Task>, String> {
+pub fn get_all_tasks(user_id: i64, mission:i64) -> Result<Vec<Task>, String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
 
     let mut stmt = conn
-        .prepare("SELECT * FROM task WHERE user_id = ?")
+        .prepare("SELECT * FROM task WHERE user_id = ? AND mission = ? ORDER BY is_completed ASC")
         .map_err(|e| e.to_string())?;
 
     let task_iter = stmt
-        .query_map([user_id], |row| {
+        .query_map([user_id, mission], |row| {
             Ok(Task {
                 id: row.get(0)?,
                 mission: row.get(1)?,
@@ -127,7 +127,7 @@ pub fn get_task(id: i64) -> Result<Value, String> {
 }
 
 #[tauri::command]
-pub fn insert_task(mission: String, task_name: String, user_id: i64, points: i64, due_date: String) -> Result<i64, String> {
+pub fn insert_task(mission: i64, task_name: String, user_id: i64, points: i64, due_date: String) -> Result<i64, String> {
     let is_completed = 0;
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
     conn.execute(

@@ -11,8 +11,8 @@ export const initDatabase = async () => {
 
 // Task API
 
-export const getAllTasks = async (user_id) => {
-    const result = await invoke("get_all_tasks", { userId: user_id });
+export const getAllTasks = async (user_id, mission) => {
+    const result = await invoke("get_all_tasks", { userId: user_id, mission: mission });
     return result;
 }
 
@@ -25,11 +25,11 @@ export const getTask = async (id) => {
 export const insertTask = async (task) => {
     try {
         const id = await invoke('insert_task', {
-            mission: task.missionId,
+            mission: parseInt(task.missionId),
             taskName: task.taskName,
-            userId: task.userId,
-            points: task.points,
-            dueDate: task.dueDate,
+            userId: parseInt(task.userId),
+            points: parseInt(task.points),
+            dueDate: task.due_date,
         });
         return id;
     } catch (err) {
@@ -41,11 +41,11 @@ export const editTask = async (task) => {
     try {
         const id = await invoke('edit_task', {
             id: task.id,
-            mission: task.missionId,
-            taskName: task.taskName,
-            userId: task.userId,
-            points: task.points,
-            dueDate: task.dueDate,
+            mission: parseInt(task.missionId),
+            taskName: task.task_name,
+            userId: parseInt(task.userId),
+            points: parseInt(task.points),
+            dueDate: task.due_date,
         });
         return id;
     } catch (err) {
@@ -123,7 +123,7 @@ export const insertMission = async (mission) => {
 export const editMission = async (mission) => {
     try {
         const id = await invoke('edit_mission', {
-            id: mission.id,
+            id: parseInt(mission.id),
             title: mission.title,
             userId: mission.userId,
         });
@@ -150,7 +150,7 @@ export const getAllRewards = async (user_id, status) => {
     console.log(user_id);
 
     const result = await invoke("get_all_rewards", {
-        userId: user_id,
+        userId: parseInt(user_id),
         status: status
     });
     console.log(result);
@@ -168,8 +168,8 @@ export const insertReward = async (reward) => {
     try {
         const id = await invoke('insert_reward', {
             name: reward.name,
-            points: reward.points,
-            status: reward.status,
+            points: parseInt(reward.points),
+            status: parseInt(reward.status),
             userId: reward.userId
         });
         console.log(id);
@@ -187,8 +187,8 @@ export const editReward = async (reward) => {
         const id = await invoke('edit_reward', {
             id: reward.id,
             name: reward.name,
-            points: reward.points,
-            status: reward.status,
+            points: parseInt(reward.points),
+            status: parseInt(reward.status),
             userId: reward.userId
         });
         return id;

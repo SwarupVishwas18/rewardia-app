@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import AddTaskForm from "./components/AddTaskForm";
 import AuthNav from "./components/AuthNav";
 import MissionList from "./components/MissionList";
@@ -10,8 +10,11 @@ function Home() {
 
     const [userId, setUserId] = useState()
     const [missions, setMissions] = useState([])
-    const [activeMission, setActiveMission] = useState()
+    const [activeMission, setActiveMission] = useState({
+        title: ""
+    })
     const [isModalVisible, setIsModalVisible] = useState(false);
+    let [tasks, setTasks] = useState([]);
 
     useEffect(() => {
         initDatabase().then((result2) => {
@@ -19,14 +22,17 @@ function Home() {
                 if (result) {
                     console.log(result);
                     setUserId(result.user_id)
-                    console.log(userId);
 
-                    getAllMissions(userId).then((res) => {
+                    getAllMissions(result.user_id).then((res) => {
+                        console.log(userId);
                         console.log(res);
                         setMissions(res)
                         if (res.length > 0) {
                             setActiveMission(res[0])
+                            console.log(res[0]);
                         }
+                    }).catch((e) => {
+                        console.log(userId);
                     })
                 } else {
                     navigate("/")
@@ -48,9 +54,8 @@ function Home() {
                     </div>
                 </div>
                 <div className="home-rs">
-                    <TaskContainer taskCtrTitle={"My Day"} heightValue={400} />
-                    <TaskContainer taskCtrTitle={"Other Tasks"} heightValue={600} />
-                    <AddTaskForm />
+                    <TaskContainer taskCtrTitle={"My Day"} activeMission={activeMission} userId={userId} tasks={tasks} setTasks={setTasks} />
+                    <AddTaskForm userId={userId} mission={activeMission} setTasks={setTasks} tasks={tasks} />
                 </div>
             </div>
         </div>
