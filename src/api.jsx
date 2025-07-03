@@ -26,7 +26,7 @@ export const insertTask = async (task) => {
     try {
         const id = await invoke('insert_task', {
             mission: parseInt(task.missionId),
-            taskName: task.taskName,
+            taskName: task.task_name,
             userId: parseInt(task.userId),
             points: parseInt(task.points),
             dueDate: task.due_date,

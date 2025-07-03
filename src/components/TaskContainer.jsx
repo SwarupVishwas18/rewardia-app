@@ -27,7 +27,7 @@ function TaskContainer({ taskCtrTitle, activeMission, userId, tasks, setTasks })
             <div className="tasks-container">
                 {tasks.length == 0 && <h2>No Tasks Found.</h2>}
                 {tasks.map((task, index) => (
-                    <Task task={task} key={task.id} />
+                    <Task task={task} key={task.id} tasks={tasks} setTasks={setTasks} />
                 ))}
             </div>
         </section>
