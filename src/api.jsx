@@ -45,7 +45,9 @@ export const editTask = async (task) => {
             taskName: task.task_name,
             userId: parseInt(task.userId),
             points: parseInt(task.points),
+            isCompleted: parseInt(task.is_completed),
             dueDate: task.due_date,
+            completedDate: task.completedDate,
         });
         return id;
     } catch (err) {

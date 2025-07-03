@@ -80,7 +80,7 @@ pub fn get_all_tasks(user_id: i64, mission:i64) -> Result<Vec<Task>, String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
 
     let mut stmt = conn
-        .prepare("SELECT * FROM task WHERE user_id = ? AND mission = ? ORDER BY is_completed ASC")
+        .prepare("SELECT * FROM task WHERE user_id = ? AND mission = ? AND is_completed = 0")
         .map_err(|e| e.to_string())?;
 
     let task_iter = stmt
@@ -148,7 +148,7 @@ pub fn insert_task(mission: i64, task_name: String, user_id: i64, points: i64, d
 }
 
 #[tauri::command]
-pub fn edit_task(id:i64,mission: String, task_name: String, user_id: i64, points: i64, due_date: String, is_completed: i64, completed_date: String) -> Result<(), String> {
+pub fn edit_task(id:i64,mission: i64, task_name: String, user_id: i64, points: i64, due_date: String, is_completed: i64, completed_date: String) -> Result<(), String> {
     let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
     conn.execute(
         "UPDATE task SET
@@ -158,7 +158,7 @@ pub fn edit_task(id:i64,mission: String, task_name: String, user_id: i64, points
             points = ?5,
             due_date = ?6,
             is_completed = ?7,
-            completed_date = ?8,
+            completed_date = ?8
             WHERE id = ?1",
         params![
             id,
