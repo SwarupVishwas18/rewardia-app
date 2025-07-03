@@ -1,7 +1,7 @@
 import { FaTrash } from "react-icons/fa";
 import coin from "../assets/coin.png"
 import { useEffect, useState } from "react";
-import { deleteTask, editTask } from "../api";
+import { deleteTask, editTask, editUserPoints, getUser } from "../api";
 
 function Task({ task, setTasks, tasks }) {
 
@@ -21,6 +21,9 @@ function Task({ task, setTasks, tasks }) {
         const day = String(today.getDate()).padStart(2, '0');
 
         const completedDate = `${year}-${month}-${day}`;
+
+        console.log(task);
+
         editTask({
             id: task.id,
             missionId: task.mission,
@@ -35,6 +38,32 @@ function Task({ task, setTasks, tasks }) {
 
             setTasks(tasks.filter(t => (t.id != task.id)))
             setChecked(!checked)
+
+            console.log(task);
+
+
+            getUser(task.user_id)
+                .then((userRes) => {
+                    console.log(userRes);
+
+                    const storedDate = new Date(task.due_date);
+                    const currentDate = new Date();
+
+                    // Set time of both dates to midnight for accurate day comparison
+                    storedDate.setHours(0, 0, 0, 0);
+                    currentDate.setHours(0, 0, 0, 0);
+
+                    const diffTime = storedDate - currentDate; // in milliseconds
+                    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+                    const acqPoints = userRes.points + parseInt((task.points * (diffDays / 5)))
+
+                    editUserPoints(task.user_id, acqPoints).then((pointRes) => {
+                        console.log(pointRes);
+
+                        alert("Congrats!! Points acquired : " + parseInt((task.points * (diffDays / 5))))
+                    })
+                })
         }).catch(e => {
             console.log(e);
 

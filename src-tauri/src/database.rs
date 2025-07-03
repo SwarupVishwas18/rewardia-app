@@ -246,6 +246,61 @@ pub fn insert_user(username: String, name: String, password: String) -> Result<i
     Ok(id)
 }
 
+
+#[tauri::command]
+pub fn get_user(id: i64) -> Result<Value, String> {
+    let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+    
+    let mut stmt = conn.prepare("SELECT * FROM user WHERE id = ?").map_err(|e| e.to_string())?;
+    let column_names: Vec<String> = stmt.column_names().iter().map(|&s| s.to_string()).collect();
+
+    let user = stmt.query_row([id], |row| {
+        let mut obj = serde_json::Map::new();
+        for (i, col_name) in column_names.iter().enumerate() {
+            let value: rusqlite::types::Value = row.get(i)?;
+            obj.insert(col_name.to_string(), sqlite_value_to_json(value));
+        }
+        Ok(Value::Object(obj))
+    });
+    match user {
+        Ok(user_data) => Ok(user_data),
+        Err(rusqlite::Error::QueryReturnedNoRows) => Err("No user found with the given ID.".to_string()),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+#[tauri::command]
+pub fn get_user_points(id: i64) -> Result<Value, String> {
+    let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+
+    let mut stmt = conn.prepare("SELECT points FROM user WHERE id = ?").map_err(|e| e.to_string())?;
+
+    let user = stmt.query_row([id], |row| {
+        let value: rusqlite::types::Value = row.get(0)?;
+        let mut obj = serde_json::Map::new();
+        obj.insert("points".to_string(), sqlite_value_to_json(value));
+        Ok(Value::Object(obj))
+    });
+
+    match user {
+        Ok(user_data) => Ok(user_data),
+        Err(rusqlite::Error::QueryReturnedNoRows) => Err("No user found with the given ID.".to_string()),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+#[tauri::command]
+pub fn edit_user_points(id: i64, points: i64) -> Result<(), String> {
+    let conn = Connection::open(DB_PATH).map_err(|e| e.to_string())?;
+
+    conn.execute(
+        "UPDATE user SET points = ?2 WHERE id = ?1",
+        params![id, points],
+    ).map_err(|e| e.to_string())?;
+
+    Ok(())
+}
+
 // Mission CRUD Function
 
 #[tauri::command]

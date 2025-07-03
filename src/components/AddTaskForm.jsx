@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { insertTask } from "../api";
+import { useNavigate } from "react-router";
 
 function AddTaskForm({ userId, mission, setTasks, tasks }) {
 
     const [title, setTitle] = useState("")
     const [points, setPoints] = useState(0)
     const [date, setDate] = useState("")
+
+    const navigate = useNavigate()
 
     const handleAddTask = () => {
         if (title == "" || points == 0 || date == "") {
@@ -29,6 +32,7 @@ function AddTaskForm({ userId, mission, setTasks, tasks }) {
                     due_date: date,
                     id: res
                 }])
+                navigate(0)
             }).catch((e) => {
                 console.log(e);
 

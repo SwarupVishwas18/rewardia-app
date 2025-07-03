@@ -97,6 +97,25 @@ export const signup = async (username, name, password) => {
     }
 }
 
+export const getUser = async (id) => {
+    const result = await invoke('get_user', { id });
+    const user = JSON.parse(JSON.stringify(result));
+    return user;
+}
+
+
+export const editUserPoints = async (id, points) => {
+    try {
+        const re_id = await invoke('edit_user_points', {
+            id: parseInt(id),
+            points: parseInt(points),
+        });
+        return re_id;
+    } catch (err) {
+        return err + "";
+    }
+};
+
 // Mission API
 
 export const getAllMissions = async (user_id) => {
