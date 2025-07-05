@@ -26,6 +26,12 @@ This idea came to me back in 2021, and I’ve always wanted to bring it to life.
 
 ---
 
+## Screenshots
+
+<img src="https://github.com/SwarupVishwas18/rewardia-app/blob/main/public/1.png" />
+<img src="https://github.com/SwarupVishwas18/rewardia-app/blob/main/public/2.png" />
+<img src="https://github.com/SwarupVishwas18/rewardia-app/blob/main/public/4.png" />
+
 ## 🧰 Setup
 
 ### 🔧 Prerequisites (For Development)
