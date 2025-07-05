@@ -80,9 +80,7 @@ function Signup() {
                     </div>
                     <div className="btns-main">
                         <button className="submit-btn" onClick={handleSignup}>Submit</button>
-                        <a href="/">
-                            <button className="secondary-btn">Go Back</button>
-                        </a>
+                        <button onClick={() => { navigate("/") }} className="secondary-btn">Go Back</button>
                     </div>
                 </div>
                 <div className="rs">
