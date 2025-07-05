@@ -12,7 +12,7 @@ function AddTaskForm({ userId, mission, setTasks, tasks }) {
 
     const handleAddTask = () => {
         if (title == "" || points == 0 || date == "") {
-            alert("data not entered properly")
+            alert("data not entered")
         } else {
             console.log(mission);
             insertTask({

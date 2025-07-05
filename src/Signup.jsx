@@ -46,7 +46,7 @@ function Signup() {
                         }
                         else {
 
-                            alert("Maybe username error")
+                            alert("username already exists")
                         }
                     }).catch((e) => {
                         console.log(e);

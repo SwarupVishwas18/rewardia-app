@@ -38,7 +38,7 @@ function Login() {
                             alert("issue saving session")
                         })
                     } else {
-                        alert("maybe incorrect data")
+                        alert("incorrect data")
                     }
                 }).catch((e) => {
                     console.log(e);
