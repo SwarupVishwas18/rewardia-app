@@ -10,6 +10,9 @@ function AddMission({ setIsModalVisible, setMissions, userId, missions }) {
             alert("data not entered")
         } else {
 
+            console.log(userId);
+
+
             insertMission({
                 title: name,
                 userId: userId

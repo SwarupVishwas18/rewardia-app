@@ -34,9 +34,11 @@ function Signup() {
                         if (result.success) {
                             console.log(result.data);
 
-                            saveSession(result.data.id, crypto.randomUUID()).then((res) => {
-                                navigate("/home")
+                            saveSession(result.data, crypto.randomUUID()).then((res) => {
+                                setTimeout(() => {
+                                    navigate("/home")
 
+                                }, 1000)
                             }).catch((e) => {
                                 console.log(e);
                                 alert("error adding data")

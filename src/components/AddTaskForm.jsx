@@ -32,7 +32,6 @@ function AddTaskForm({ userId, mission, setTasks, tasks }) {
                     due_date: date,
                     id: res
                 }])
-                navigate(0)
             }).catch((e) => {
                 console.log(e);
 

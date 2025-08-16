@@ -6,6 +6,7 @@ import TaskContainer from "./components/TaskContainer";
 import "./Home.css";
 import { checkSession, getAllMissions, getUser, initDatabase } from "./api";
 import AddMission from "./components/modals/AddMission";
+import { useNavigate } from "react-router";
 function Home() {
 
     const [userId, setUserId] = useState()
@@ -13,6 +14,8 @@ function Home() {
     const [activeMission, setActiveMission] = useState({
         title: ""
     })
+
+    const navigate = useNavigate();
 
     const [userDetails, setUserDetails] = useState({})
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -61,7 +64,7 @@ function Home() {
                 </div>
                 <div className="home-rs">
                     <TaskContainer taskCtrTitle={"My Day"} activeMission={activeMission} userId={userId} tasks={tasks} setTasks={setTasks} userDetails={userDetails} />
-                    <AddTaskForm userId={userId} mission={activeMission} setTasks={setTasks} tasks={tasks} />
+                    {activeMission && <AddTaskForm userId={userId} mission={activeMission} setTasks={setTasks} tasks={tasks} />}
                 </div>
             </div>
         </div>

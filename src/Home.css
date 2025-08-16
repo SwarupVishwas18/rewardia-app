@@ -158,6 +158,13 @@ nav img{
     width: 60%;
 }
 
+.add-task-form button {
+    background-color: var(--bg-primary);
+    padding: .4rem 1rem;
+    border: none;
+    border-radius: 8px;
+}
+
 input[type="checkbox"] {
   accent-color: var(--bg-primary); 
   padding: .2rem;

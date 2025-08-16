@@ -2,10 +2,12 @@ import { FaTrash } from "react-icons/fa";
 import coin from "../assets/coin.png"
 import { useEffect, useState } from "react";
 import { deleteTask, editTask, editUserPoints, getUser } from "../api";
+import { useNavigate } from "react-router";
 
 function Task({ task, setTasks, tasks }) {
 
     const [checked, setChecked] = useState(task.is_completed == 1)
+    const navigate = useNavigate()
 
     const handleDelete = () => {
         deleteTask(task.id).then(() => {
@@ -54,14 +56,20 @@ function Task({ task, setTasks, tasks }) {
                     currentDate.setHours(0, 0, 0, 0);
 
                     const diffTime = storedDate - currentDate; // in milliseconds
-                    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                    var diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-                    const acqPoints = userRes.points + parseInt((task.points * (diffDays / 5)))
+
+
+
+
+                    const acqPoints = userRes.points + (task.points + parseInt((task.points * (diffDays))))
 
                     editUserPoints(task.user_id, acqPoints).then((pointRes) => {
                         console.log(pointRes);
 
-                        alert("Congrats!! Points acquired : " + parseInt((task.points * (diffDays / 5))))
+                        alert("Congrats!! Points acquired : " + (task.points + parseInt((task.points * (diffDays)))))
+                        navigate(0)
+
                     })
                 })
         }).catch(e => {

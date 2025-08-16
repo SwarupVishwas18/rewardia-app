@@ -10,6 +10,8 @@ function TaskContainer({ taskCtrTitle, activeMission, userId, tasks, setTasks })
     useEffect(() => {
         if (activeMission != null) {
             console.log(activeMission);
+            console.log(userId);
+
 
             getAllTasks(userId, activeMission.id).then((res) => {
                 console.log(res);
