@@ -1,0 +1,28 @@
+BEGIN TRANSACTION;
+
+-- Mission table
+CREATE TABLE mission (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL
+);
+
+-- Task table
+CREATE TABLE task (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    due DATE,
+    points INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 0,
+    mission INTEGER,
+    FOREIGN KEY (mission) REFERENCES mission(id) ON DELETE CASCADE
+);
+
+-- Reward table
+CREATE TABLE reward (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    points INTEGER NOT NULL DEFAULT 0,
+    status INTEGER NOT NULL DEFAULT 0,
+);
+
+COMMIT;
